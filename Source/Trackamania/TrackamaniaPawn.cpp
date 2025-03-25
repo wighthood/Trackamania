@@ -85,6 +85,8 @@ void ATrackamaniaPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 		// reset the vehicle 
 		EnhancedInputComponent->BindAction(ResetVehicleAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::ResetVehicle);
+
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Jump);
 	}
 	else
 	{
@@ -183,6 +185,12 @@ void ATrackamaniaPawn::ToggleCamera(const FInputActionValue& Value)
 
 	FrontCamera->SetActive(bFrontCameraActive);
 	BackCamera->SetActive(!bFrontCameraActive);
+}
+
+void ATrackamaniaPawn::Jump()
+{
+	FVector Jumpvelocity = this->GetVelocity() + this->GetActorUpVector() * 1000;
+	this->GetMesh()->SetPhysicsLinearVelocity(Jumpvelocity);
 }
 
 void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
