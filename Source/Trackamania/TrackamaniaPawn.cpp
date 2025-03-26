@@ -87,6 +87,7 @@ void ATrackamaniaPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(ResetVehicleAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::ResetVehicle);
 
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Jump);
+		EnhancedInputComponent->BindAction(RollAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Roll);
 	}
 	else
 	{
@@ -187,11 +188,26 @@ void ATrackamaniaPawn::ToggleCamera(const FInputActionValue& Value)
 	BackCamera->SetActive(!bFrontCameraActive);
 }
 
+void ATrackamaniaPawn::Roll(const FInputActionValue& Value)
+{
+
+}
+
 void ATrackamaniaPawn::Jump()
 {
-	FVector Jumpvelocity = this->GetVelocity() + this->GetActorUpVector() * 1000;
-	this->GetMesh()->SetPhysicsLinearVelocity(Jumpvelocity);
+	int grounded = 0;
+	for (UChaosVehicleWheel* wheel : ChaosVehicleMovement->Wheels)
+	{
+		if (!wheel->IsInAir())
+			grounded++;
+	}
+	if (grounded >= 3)
+	{
+		FVector Jumpvelocity = this->GetVelocity() + this->GetActorUpVector() * 1000;
+		this->GetMesh()->SetPhysicsLinearVelocity(Jumpvelocity);
+	}
 }
+
 
 void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
 {

@@ -78,6 +78,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* JumpAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* RollAction;
 	/** Keeps track of which camera is active */
 	bool bFrontCameraActive = false;
 
@@ -125,6 +127,8 @@ protected:
 	void ResetVehicle(const FInputActionValue& Value);
 
 	void Jump();
+
+	void Roll(const FInputActionValue& Value);
 
 	/** Called when the brake lights are turned on or off */
 	UFUNCTION(BlueprintImplementableEvent, Category="Vehicle")
