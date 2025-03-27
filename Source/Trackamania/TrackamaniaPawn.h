@@ -80,6 +80,16 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
     UInputAction* RollAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UInputAction* PitchAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* YawAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Respawn)
+	AActor* RespawnPoint;
+
 	/** Keeps track of which camera is active */
 	bool bFrontCameraActive = false;
 
@@ -130,6 +140,11 @@ protected:
 
 	void Roll(const FInputActionValue& Value);
 
+	void Pitch(const FInputActionValue& Value);
+
+	void Yaw(const FInputActionValue& Value);
+
+	bool Grounded();
 	/** Called when the brake lights are turned on or off */
 	UFUNCTION(BlueprintImplementableEvent, Category="Vehicle")
 	void BrakeLights(bool bBraking);
@@ -146,4 +161,6 @@ public:
 	FORCEINLINE UCameraComponent* GetBackCamera() const { return BackCamera; }
 	/** Returns the cast Chaos Vehicle Movement subobject */
 	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
+
+	void SetRespawn(AActor* Checkpoint);
 };

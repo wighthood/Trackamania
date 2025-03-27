@@ -15,6 +15,7 @@
 
 DEFINE_LOG_CATEGORY(LogTemplateVehicle);
 
+
 ATrackamaniaPawn::ATrackamaniaPawn()
 {
 	// construct the front camera boom
@@ -86,8 +87,11 @@ void ATrackamaniaPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		// reset the vehicle 
 		EnhancedInputComponent->BindAction(ResetVehicleAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::ResetVehicle);
 
+		//	rotation control in air
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Jump);
 		EnhancedInputComponent->BindAction(RollAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Roll);
+		EnhancedInputComponent->BindAction(PitchAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Pitch);	
+		EnhancedInputComponent->BindAction(YawAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Yaw);
 	}
 	else
 	{
@@ -188,12 +192,7 @@ void ATrackamaniaPawn::ToggleCamera(const FInputActionValue& Value)
 	BackCamera->SetActive(!bFrontCameraActive);
 }
 
-void ATrackamaniaPawn::Roll(const FInputActionValue& Value)
-{
-
-}
-
-void ATrackamaniaPawn::Jump()
+bool ATrackamaniaPawn::Grounded()
 {
 	int grounded = 0;
 	for (UChaosVehicleWheel* wheel : ChaosVehicleMovement->Wheels)
@@ -203,28 +202,76 @@ void ATrackamaniaPawn::Jump()
 	}
 	if (grounded >= 3)
 	{
-		FVector Jumpvelocity = this->GetVelocity() + this->GetActorUpVector() * 1000;
-		this->GetMesh()->SetPhysicsLinearVelocity(Jumpvelocity);
+		return true;
+	}
+	return false;
+}
+
+void ATrackamaniaPawn::Roll(const FInputActionValue& Value)
+{
+	if (!Grounded())
+	{
+		AddActorLocalRotation(FRotator(0, 0, Value.Get<float>())*2, false, nullptr, ETeleportType::TeleportPhysics);
 	}
 }
 
+void ATrackamaniaPawn::Jump()
+{
+	if (Grounded())
+	{
+		FVector Jumpvelocity = GetVelocity() + GetActorUpVector() * 1000;
+		GetMesh()->SetPhysicsLinearVelocity(Jumpvelocity);
+	}
+}
+
+void ATrackamaniaPawn::Pitch(const FInputActionValue& Value)
+{
+	if (!Grounded())
+	{
+		AddActorLocalRotation(FRotator(Value.Get<float>(), 0, 0), false, nullptr, ETeleportType::TeleportPhysics);
+	}
+}
+
+void ATrackamaniaPawn::Yaw(const FInputActionValue& Value)
+{
+	if (!Grounded())
+	{
+		AddActorLocalRotation(FRotator(0, Value.Get<float>(), 0), false, nullptr, ETeleportType::TeleportPhysics);
+	}
+}
+
+void ATrackamaniaPawn::SetRespawn(AActor* Checkpoint)
+{
+	RespawnPoint = Checkpoint;
+	Checkpoint->SetActorEnableCollision(false);
+}
 
 void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
 {
-	// reset to a location slightly above our current one
-	FVector ResetLocation = GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
+	FVector ResetLocation;
+	FRotator ResetRotation;
+	if (RespawnPoint != nullptr)
+	{
+		// reset to a location slightly above our current one
+		ResetLocation = RespawnPoint->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f);
 
-	// reset to our yaw. Ignore pitch and roll
-	FRotator ResetRotation = GetActorRotation();
+		// reset to our yaw. Ignore pitch and roll
+		ResetRotation = RespawnPoint->GetActorRotation();
+	}
+	else
+	{
+		// reset to a location slightly above our current one
+		ResetLocation = FVector(0.0f, 0.0f, 50.0f);
+
+		// reset to our yaw. Ignore pitch and roll
+		ResetRotation = FRotator(0.0f,0.0f,0.0f);
+	}
 	ResetRotation.Pitch = 0.0f;
 	ResetRotation.Roll = 0.0f;
-	
 	// teleport the actor to the reset spot and reset physics
 	SetActorTransform(FTransform(ResetRotation, ResetLocation, FVector::OneVector), false, nullptr, ETeleportType::TeleportPhysics);
-
 	GetMesh()->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
-
 	UE_LOG(LogTemplateVehicle, Error, TEXT("Reset Vehicle"));
 }
 
