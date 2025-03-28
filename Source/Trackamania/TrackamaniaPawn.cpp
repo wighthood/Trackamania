@@ -228,7 +228,7 @@ void ATrackamaniaPawn::Pitch(const FInputActionValue& Value)
 {
 	if (!Grounded())
 	{
-		AddActorLocalRotation(FRotator(Value.Get<float>(), 0, 0), false, nullptr, ETeleportType::TeleportPhysics);
+		AddActorLocalRotation(FRotator(Value.Get<float>()*1.5, 0, 0), false, nullptr, ETeleportType::TeleportPhysics);
 	}
 }
 
@@ -236,7 +236,7 @@ void ATrackamaniaPawn::Yaw(const FInputActionValue& Value)
 {
 	if (!Grounded())
 	{
-		AddActorLocalRotation(FRotator(0, Value.Get<float>(), 0), false, nullptr, ETeleportType::TeleportPhysics);
+		AddActorLocalRotation(FRotator(0, Value.Get<float>()*1.5, 0), false, nullptr, ETeleportType::TeleportPhysics);
 	}
 }
 
