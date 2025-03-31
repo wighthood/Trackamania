@@ -240,13 +240,7 @@ void ATrackamaniaPawn::Yaw(const FInputActionValue& Value)
 	}
 }
 
-void ATrackamaniaPawn::SetRespawn(AActor* Checkpoint)
-{
-	RespawnPoint = Checkpoint;
-	Checkpoint->SetActorEnableCollision(false);
-}
-
-void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
+void ATrackamaniaPawn::Respawn()
 {
 	FVector ResetLocation;
 	FRotator ResetRotation;
@@ -264,7 +258,7 @@ void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
 		ResetLocation = FVector(0.0f, 0.0f, 50.0f);
 
 		// reset to our yaw. Ignore pitch and roll
-		ResetRotation = FRotator(0.0f,0.0f,0.0f);
+		ResetRotation = FRotator(0.0f, 0.0f, 0.0f);
 	}
 	ResetRotation.Pitch = 0.0f;
 	ResetRotation.Roll = 0.0f;
@@ -273,6 +267,17 @@ void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
 	GetMesh()->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
 	UE_LOG(LogTemplateVehicle, Error, TEXT("Reset Vehicle"));
+}
+
+void ATrackamaniaPawn::SetRespawn(AActor* Checkpoint)
+{
+	RespawnPoint = Checkpoint;
+	Checkpoint->SetActorEnableCollision(false);
+}
+
+void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
+{
+	Respawn();
 }
 
 #undef LOCTEXT_NAMESPACE

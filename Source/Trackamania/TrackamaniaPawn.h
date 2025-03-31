@@ -162,5 +162,7 @@ public:
 	/** Returns the cast Chaos Vehicle Movement subobject */
 	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
 
+	void Respawn();
+
 	void SetRespawn(AActor* Checkpoint);
 };
