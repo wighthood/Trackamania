@@ -6,6 +6,7 @@
 #include "TrackamaniaUI.h"
 #include "EnhancedInputSubsystems.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
+#include "EngineUtils.h"
 
 void ATrackamaniaPlayerController::BeginPlay()
 {
@@ -17,6 +18,14 @@ void ATrackamaniaPlayerController::BeginPlay()
 	check(VehicleUI);
 
 	VehicleUI->AddToViewport();
+
+	for (TActorIterator<ACheckPoint> It(GetWorld()); It; ++It)
+	{
+		if (*It)
+		{
+			CheckPoints.Add(*It);
+		}
+	}
 }
 
 void ATrackamaniaPlayerController::SetupInputComponent()
@@ -45,6 +54,7 @@ void ATrackamaniaPlayerController::Tick(float Delta)
 	{
 		VehicleUI->UpdateSpeed(VehiclePawn->GetChaosVehicleMovement()->GetForwardSpeed());
 		VehicleUI->UpdateGear(VehiclePawn->GetChaosVehicleMovement()->GetCurrentGear());
+		VehicleUI->UpdateTimer(VehiclePawn->Timer);
 	}
 }
 
@@ -54,4 +64,12 @@ void ATrackamaniaPlayerController::OnPossess(APawn* InPawn)
 
 	// get a pointer to the controlled pawn
 	VehiclePawn = CastChecked<ATrackamaniaPawn>(InPawn);
+}
+
+void ATrackamaniaPlayerController::Fullreset()
+{
+	for (ACheckPoint* CheckPoint : CheckPoints)
+	{
+		CheckPoint->SetActorEnableCollision(true);
+	}
 }

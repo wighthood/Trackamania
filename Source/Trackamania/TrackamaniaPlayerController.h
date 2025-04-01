@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "CheckPoint.h"
 #include "TrackamaniaPlayerController.generated.h"
 
 class UInputMappingContext;
@@ -45,6 +46,9 @@ protected:
 	/** Pointer to the UI widget */
 	TObjectPtr<UTrackamaniaUI> VehicleUI;
 
+	UPROPERTY()
+	TArray<ACheckPoint*> CheckPoints;
+
 	
 
 	// Begin Actor interface
@@ -56,6 +60,8 @@ protected:
 public:
 
 	virtual void Tick(float Delta) override;
+
+	void Fullreset();
 
 	// End Actor interface
 

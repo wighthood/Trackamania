@@ -17,3 +17,8 @@ void UTrackamaniaUI::UpdateGear(int32 NewGear)
 	// call the Blueprint handler
 	OnGearUpdate(NewGear);
 }
+
+void UTrackamaniaUI::UpdateTimer(float newTimer)
+{
+	OnTimerUpdate(newTimer);
+}

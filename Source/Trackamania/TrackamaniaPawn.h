@@ -90,6 +90,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Respawn)
 	AActor* RespawnPoint;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UInputAction* FullResetAction;
+
 	/** Keeps track of which camera is active */
 	bool bFrontCameraActive = false;
 
@@ -107,6 +110,9 @@ public:
 	virtual void Tick(float Delta) override;
 
 	// End Actor interface
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Timer)
+	float Timer = 0.0f;
 
 protected:
 
@@ -164,5 +170,6 @@ public:
 
 	void Respawn();
 
+	void FullReset();
 	void SetRespawn(AActor* Checkpoint);
 };

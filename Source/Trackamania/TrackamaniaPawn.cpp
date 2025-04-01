@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
+#include "TrackamaniaPlayerController.h"
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
 
@@ -92,6 +93,8 @@ void ATrackamaniaPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(RollAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Roll);
 		EnhancedInputComponent->BindAction(PitchAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Pitch);	
 		EnhancedInputComponent->BindAction(YawAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Yaw);
+
+		EnhancedInputComponent->BindAction(FullResetAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::FullReset);
 	}
 	else
 	{
@@ -112,6 +115,7 @@ void ATrackamaniaPawn::Tick(float Delta)
 	CameraYaw = FMath::FInterpTo(CameraYaw, 0.0f, Delta, 1.0f);
 
 	BackSpringArm->SetRelativeRotation(FRotator(0.0f, CameraYaw, 0.0f));
+	Timer += Delta;
 }
 
 void ATrackamaniaPawn::Steering(const FInputActionValue& Value)
@@ -278,6 +282,17 @@ void ATrackamaniaPawn::SetRespawn(AActor* Checkpoint)
 void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
 {
 	Respawn();
+}
+
+void ATrackamaniaPawn::FullReset()
+{
+	Timer = 0;
+	RespawnPoint = nullptr;
+	Respawn();
+	if (Controller)
+	{
+		Cast<ATrackamaniaPlayerController>(Controller)->Fullreset();
+	}
 }
 
 #undef LOCTEXT_NAMESPACE
