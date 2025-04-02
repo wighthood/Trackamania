@@ -15,7 +15,7 @@ UCLASS(abstract)
 class TRACKAMANIA_API UTrackamaniaUI : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 protected:
 
 	/** Controls the display of speed in Km/h or MPH */
@@ -33,6 +33,8 @@ public:
 
 	void UpdateTimer(float NewTimer);
 
+	void UpdateBestTime(float NewBestTime);
+
 protected:
 
 	/** Implemented in Blueprint to display the new speed */
@@ -45,4 +47,8 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = Timer)
 	void OnTimerUpdate(float NewTimer);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = BestTime)
+
+	void OnBestTimeUpdate(float NewBestTime);
 };

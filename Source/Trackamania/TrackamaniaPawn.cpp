@@ -284,6 +284,18 @@ void ATrackamaniaPawn::ResetVehicle(const FInputActionValue& Value)
 	Respawn();
 }
 
+void ATrackamaniaPawn::SaveBestTime()
+{
+	if (BestTime == NULL || Timer < BestTime)
+	{
+		BestTime = Timer;
+		if (Controller)
+		{
+			Cast<ATrackamaniaPlayerController>(Controller)->SaveBestTime(BestTime);
+		}
+	}
+}
+
 void ATrackamaniaPawn::FullReset()
 {
 	Timer = 0;

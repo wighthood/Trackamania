@@ -111,8 +111,11 @@ public:
 
 	// End Actor interface
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Timer)
+	UPROPERTY(BlueprintReadOnly, Category = Timer)
 	float Timer = 0.0f;
+
+	UPROPERTY(BlueprintReadOnly, Category = Timer)
+	float BestTime;
 
 protected:
 
@@ -168,6 +171,7 @@ public:
 	/** Returns the cast Chaos Vehicle Movement subobject */
 	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
 
+	void SaveBestTime();
 	void Respawn();
 
 	void FullReset();

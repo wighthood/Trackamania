@@ -34,9 +34,22 @@ void ACheckPoint::Tick(float DeltaTime)
 
 void ACheckPoint::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(ATrackamaniaPawn::StaticClass()))
-	{
-		Cast<ATrackamaniaPawn>(OtherActor)->SetRespawn(this);
-	}
+		if (OtherActor->IsA(ATrackamaniaPawn::StaticClass()))
+		{
+			ATrackamaniaPawn* other = Cast<ATrackamaniaPawn>(OtherActor);
+			if (other->IsValidLowLevel())
+			{
+				if (!IsEnd)
+				{
+					other->SetRespawn(this);
+				}
+				else
+				{
+					other->SaveBestTime();
+					other->FullReset();
+				}
+			}
+		}
+
 }
 

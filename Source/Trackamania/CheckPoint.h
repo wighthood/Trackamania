@@ -25,6 +25,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, Category = "End")
+	bool IsEnd;
+
 	UPROPERTY(VisibleAnywhere, Category = "Checkpoint")
 	UBoxComponent* TriggerBox;
 

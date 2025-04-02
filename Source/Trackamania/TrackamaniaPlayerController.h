@@ -63,6 +63,7 @@ public:
 
 	void Fullreset();
 
+	void SaveBestTime(float BestTime);
 	// End Actor interface
 
 	// Begin PlayerController interface

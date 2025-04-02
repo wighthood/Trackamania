@@ -73,3 +73,8 @@ void ATrackamaniaPlayerController::Fullreset()
 		CheckPoint->SetActorEnableCollision(true);
 	}
 }
+
+void ATrackamaniaPlayerController::SaveBestTime(float BestTime)
+{
+	VehicleUI->UpdateBestTime(BestTime);
+}

@@ -22,3 +22,8 @@ void UTrackamaniaUI::UpdateTimer(float newTimer)
 {
 	OnTimerUpdate(newTimer);
 }
+
+void UTrackamaniaUI::UpdateBestTime(float newBestTime)
+{
+	OnBestTimeUpdate(newBestTime);
+}
