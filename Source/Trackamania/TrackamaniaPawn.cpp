@@ -11,6 +11,7 @@
 #include "InputActionValue.h"
 #include "ChaosWheeledVehicleMovementComponent.h"
 #include "TrackamaniaPlayerController.h"
+#include <Kismet/KismetSystemLibrary.h>
 
 #define LOCTEXT_NAMESPACE "VehiclePawn"
 
@@ -95,6 +96,7 @@ void ATrackamaniaPawn::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(YawAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Yaw);
 
 		EnhancedInputComponent->BindAction(FullResetAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::FullReset);
+		EnhancedInputComponent->BindAction(QuitAction, ETriggerEvent::Triggered, this, &ATrackamaniaPawn::Quit);
 	}
 	else
 	{
@@ -194,6 +196,11 @@ void ATrackamaniaPawn::ToggleCamera(const FInputActionValue& Value)
 
 	FrontCamera->SetActive(bFrontCameraActive);
 	BackCamera->SetActive(!bFrontCameraActive);
+}
+
+void ATrackamaniaPawn::Quit()
+{
+	UKismetSystemLibrary::QuitGame(GetWorld(),Cast<APlayerController>(Controller),EQuitPreference::Quit,false);
 }
 
 bool ATrackamaniaPawn::Grounded()

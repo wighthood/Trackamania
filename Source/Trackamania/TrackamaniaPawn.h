@@ -93,6 +93,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* FullResetAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+    UInputAction* QuitAction;
+
 	/** Keeps track of which camera is active */
 	bool bFrontCameraActive = false;
 
@@ -153,6 +156,7 @@ protected:
 
 	void Yaw(const FInputActionValue& Value);
 
+	void Quit();
 	bool Grounded();
 	/** Called when the brake lights are turned on or off */
 	UFUNCTION(BlueprintImplementableEvent, Category="Vehicle")
@@ -172,8 +176,10 @@ public:
 	FORCEINLINE const TObjectPtr<UChaosWheeledVehicleMovementComponent>& GetChaosVehicleMovement() const { return ChaosVehicleMovement; }
 
 	void SaveBestTime();
+
 	void Respawn();
 
 	void FullReset();
+
 	void SetRespawn(AActor* Checkpoint);
 };
